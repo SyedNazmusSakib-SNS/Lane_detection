@@ -9,9 +9,6 @@ from perspective_utils import birdeye
 from globals import ym_per_pix, xm_per_pix
 
 class Line:
-    """
-    Class to model a lane-line.
-    """
     def __init__(self, buffer_len=10):
         # flag to mark if the line was detected the last iteration
         self.detected = False
@@ -27,9 +24,7 @@ class Line:
         self.all_y = None
 
     def update_line(self, new_fit_pixel, new_fit_meter, detected, clear_buffer=False):
-        """
-        Update Line with new fitted coefficients.
-        """
+        
         self.detected = detected
         if clear_buffer:
             self.recent_fits_pixel.clear()
@@ -40,9 +35,6 @@ class Line:
         self.recent_fits_meter.append(self.last_fit_meter)
 
     def draw(self, mask, color=(255, 0, 0), line_width=50, average=False):
-        """
-        Draw the line on a color mask image.
-        """
         h, w, c = mask.shape
         plot_y = np.linspace(0, h - 1, h)
         coeffs = self.average_fit if average else self.last_fit_pixel
@@ -56,33 +48,22 @@ class Line:
 
     @property
     def average_fit(self):
-        """
-        Average of polynomial coefficients of the last N iterations.
-        """
         return np.mean(self.recent_fits_pixel, axis=0)
 
     @property
     def curvature(self):
-        """
-        Radius of curvature of the line (averaged).
-        """
         y_eval = 0
         coeffs = self.average_fit
         return ((1 + (2 * coeffs[0] * y_eval + coeffs[1]) ** 2) ** 1.5) / np.absolute(2 * coeffs[0])
 
     @property
     def curvature_meter(self):
-        """
-        Radius of curvature of the line (averaged) in meters.
-        """
         y_eval = 0
         coeffs = np.mean(self.recent_fits_meter, axis=0)
         return ((1 + (2 * coeffs[0] * y_eval + coeffs[1]) ** 2) ** 1.5) / np.absolute(2 * coeffs[0])
 
 def get_fits_by_sliding_windows(birdeye_binary, line_lt, line_rt, n_windows=9, verbose=False):
-    """
-    Get polynomial coefficients for lane-lines detected in a binary image.
-    """
+
     height, width = birdeye_binary.shape
     histogram = np.sum(birdeye_binary[height//2:-30, :], axis=0)
     out_img = np.dstack((birdeye_binary, birdeye_binary, birdeye_binary)) * 255
