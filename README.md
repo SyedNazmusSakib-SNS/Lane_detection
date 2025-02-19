@@ -23,8 +23,4 @@ This project is divided into two main parts: Basic Lane Detection and Advanced L
 - NumPy
 - matplotlib (optional for visualization)
 
-## Contributing
-Contributions to this project are welcome. Please fork the repository and submit a pull request.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
